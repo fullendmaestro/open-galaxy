@@ -1,5 +1,9 @@
+import { CopilotKit } from "@copilotkit/react-core/v2";
+import "@copilotkit/react-core/v2/styles.css";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,7 +31,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <CopilotKit runtimeUrl="/api/copilotkit" useSingleEndpoint={false}>
+        <body className="min-h-full flex flex-col">{children}</body>
+      </CopilotKit>
     </html>
   );
 }
