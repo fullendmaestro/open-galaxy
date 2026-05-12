@@ -1,0 +1,14 @@
+# Python 3.11+ recommended. Install with: pip install -r requirements.txt
+
+copilotkit==0.1.86
+fastapi
+uvicorn
+langchain-openai
+langgraph>=1.0.8,<1.1.0
+langgraph-prebuilt<1.0.9
+python-dotenv
+ag-ui-adk
+google-adk
+jupyter
+honcho
+
