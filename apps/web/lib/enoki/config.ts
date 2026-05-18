@@ -7,7 +7,7 @@ export const enokiConfig = {
     | "mainnet",
   memwalPackageId: process.env.NEXT_PUBLIC_MEMWAL_PACKAGE_ID || "",
   memwalRegistryId: process.env.NEXT_PUBLIC_MEMWAL_REGISTRY_ID || "",
-  memwalServerUrl: "/memwal-proxy",
   // memwalServerUrl:
   //   process.env.NEXT_PUBLIC_MEMWAL_SERVER_URL || "http://localhost:9000",
+  memwalServerUrl: "/memwal-proxy",
 } as const;
