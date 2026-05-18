@@ -9,9 +9,9 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import { demonstrationCatalog } from "./declarative-generative-ui/renderers";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { SuiProviders } from "@/components/providers";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export default function RootLayout({
   children,
@@ -28,15 +28,17 @@ export default function RootLayout({
       </head>
       <body className={`antialiased`}>
         <ThemeProvider>
-          <CopilotKit
-            runtimeUrl="/api/copilotkit"
-            inspectorDefaultAnchor={{ horizontal: "right", vertical: "top" }}
-            a2ui={{ catalog: demonstrationCatalog }}
-            openGenerativeUI={{}}
-            useSingleEndpoint={false}
-          >
-            {children}
-          </CopilotKit>
+          <SuiProviders>
+            <CopilotKit
+              runtimeUrl="/api/copilotkit"
+              inspectorDefaultAnchor={{ horizontal: "right", vertical: "top" }}
+              a2ui={{ catalog: demonstrationCatalog }}
+              openGenerativeUI={{}}
+              useSingleEndpoint={false}
+            >
+              {children}
+            </CopilotKit>
+          </SuiProviders>
         </ThemeProvider>
       </body>
     </html>
