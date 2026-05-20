@@ -10,13 +10,7 @@ from copilotkit import CopilotKitMiddleware, StateStreamingMiddleware, StateItem
 from langchain.agents import create_agent
 
 # Data & state tools
-from src.query import query_data
-from src.todos import AgentState, todo_tools
-
-# A2UI tools
-from src.a2ui_dynamic_schema import generate_a2ui
-from src.a2ui_fixed_schema import search_flights
-
+from src.research.main import AgentState, research_tools
 from langchain_openai import AzureChatOpenAI
 
 load_dotenv()
@@ -29,25 +23,29 @@ model = AzureChatOpenAI(
 
 agent = create_agent(
     model=model,
-    tools=[query_data, *todo_tools, generate_a2ui, search_flights],
+    tools=[*research_tools],
     middleware=[
         CopilotKitMiddleware(),
         StateStreamingMiddleware(
-            StateItem(state_key="todos", tool="manage_todos", tool_argument="todos")
+            # Stream updates directly to the frontend when these tools are called
+            StateItem(
+                state_key="sources", 
+                tool="manageSources", 
+                tool_argument="sources"
+            ),
+            StateItem(
+                state_key="sprint_reports", 
+                tool="manageSprintReports", 
+                tool_argument="sprint_reports"
+            )
         ),
     ],
     state_schema=AgentState,
     system_prompt="""
-        You are a polished, professional demo assistant. Keep responses to 1-2 sentences.
-
-        Tool guidance:
-        - Flights: call search_flights to show flight cards with a pre-built schema.
-        - Dashboards & rich UI: call generate_a2ui to create dashboard UIs with metrics,
-          charts, tables, and cards. It handles rendering automatically.
-        - Charts: call query_data first, then render with the chart component.
-        - Todos: enable app mode first, then manage todos.
-        - A2UI actions: when you see a log_a2ui_event result (e.g. "view_details"),
-          respond with a brief confirmation. The UI already updated on the frontend.
+        You are a professional research assistant for the Hex hub platform.
+        Your primary role is to manage verifiable research ledgers, synthesize findings into structured Sprint Reports, 
+        and maintain strict tracking of source references. Ensure all persistent memory references (blobIds) are 
+        properly handled for the MemWal architecture.
     """,
 )
 
