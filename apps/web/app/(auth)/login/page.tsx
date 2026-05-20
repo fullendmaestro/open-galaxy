@@ -1,5 +1,6 @@
 "use client";
 
+import { createClient } from "@supabase/supabase-js";
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   useWallets,
@@ -110,6 +111,12 @@ async function sponsoredSignAndExecute(
 
 // --- Main Component ---
 export default function LoginPage() {
+  // Initialize standard client (safe for browser)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+
   const router = useRouter();
   const wallets = useWallets();
   const { mutateAsync: connect } = useConnectWallet();
@@ -145,12 +152,18 @@ export default function LoginPage() {
           body: JSON.stringify({ suiAddress: address }),
         });
 
-        if (!checkRes.ok) {
-          throw new Error("Unable to check account status. Please try again.");
-        }
+        if (!checkRes.ok) throw new Error("Unable to check account status.");
 
         const checkData = await checkRes.json();
+
+        // Phase 1 Success
         if (!checkData.needsSetup) {
+          if (checkData.token) {
+            await supabase.auth.setSession({
+              access_token: checkData.token,
+              refresh_token: checkData.token,
+            });
+          }
           setStep("done");
           router.push("/");
           router.refresh();
@@ -304,6 +317,16 @@ export default function LoginPage() {
         if (!res.ok) {
           const data = await res.json();
           throw new Error(data.error || "Session creation failed");
+        }
+
+        const data = await res.json();
+
+        // Phase 2 Success
+        if (data.token) {
+          await supabase.auth.setSession({
+            access_token: data.token,
+            refresh_token: data.token,
+          });
         }
 
         setStep("done");
