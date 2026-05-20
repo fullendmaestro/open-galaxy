@@ -2,7 +2,7 @@
 
 import { ExampleLayout } from "@/components/example-layout";
 import { ExampleCanvas } from "@/components/example-canvas";
-import { useGenerativeUIExamples, useExampleSuggestions } from "@/hooks";
+import { useSuggestions } from "@/hooks";
 
 import {
   CopilotChat,
@@ -15,8 +15,7 @@ import styles from "@/components/threads-drawer/threads-drawer.module.css";
 export default function HomePage() {
   const [threadId, setThreadId] = useState<string | undefined>(undefined);
 
-  useGenerativeUIExamples();
-  useExampleSuggestions();
+  useSuggestions();
 
   return (
     <div className={styles.layout}>
