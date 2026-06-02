@@ -1,0 +1,42 @@
+"use client";
+
+import "./globals.css";
+import "@copilotkit/react-core/v2/styles.css";
+
+import { CopilotKit } from "@copilotkit/react-core/v2";
+import { ThemeProvider } from "@/hooks/use-theme";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { SuiProviders } from "@/components/providers";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en" className={cn("font-sans", geist.variable)}>
+      <head>
+        <title>CopilotKit</title>
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href="/copilotkit-logo-mark.svg"
+        />
+      </head>
+      <body className={`antialiased`}>
+        <ThemeProvider>
+          <SuiProviders>
+            <CopilotKit
+              runtimeUrl="/api/copilotkit"
+              // inspectorDefaultAnchor={{ horizontal: "right", vertical: "top" }}
+              useSingleEndpoint={false}
+            >
+              {children}
+            </CopilotKit>
+          </SuiProviders>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
