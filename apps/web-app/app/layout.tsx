@@ -8,8 +8,9 @@ import { ThemeProvider } from "@/hooks/use-theme";
 import { Geist, DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { SuiProviders } from "@/components/providers";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const dmSans = DM_Sans({subsets:['latin'],variable:'--font-sans'});
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export default function RootLayout({
   children,
@@ -17,12 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", dmSans.variable)}>
       <head>
-        <title>CopilotKit</title>
-        <link
-          rel="icon"
-          type="image/svg+xml"
-          href="/copilotkit-logo-mark.svg"
-        />
+        <title>Open Galaxy</title>
+        <link rel="icon" type="image/svg+xml" href="/open-galaxy.png" />
       </head>
       <body className={`antialiased`}>
         <ThemeProvider>
@@ -32,7 +29,7 @@ export default function RootLayout({
               // inspectorDefaultAnchor={{ horizontal: "right", vertical: "top" }}
               useSingleEndpoint={false}
             >
-              {children}
+              <TooltipProvider>{children}</TooltipProvider>
             </CopilotKit>
           </SuiProviders>
         </ThemeProvider>
