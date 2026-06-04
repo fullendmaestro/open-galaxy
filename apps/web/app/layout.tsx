@@ -7,7 +7,7 @@ import { CopilotKit } from "@copilotkit/react-core/v2";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { SuiProviders } from "@/components/providers";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -17,24 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <head>
-        <title>CopilotKit</title>
-        <link
-          rel="icon"
-          type="image/svg+xml"
-          href="/copilotkit-logo-mark.svg"
-        />
+        <title>Open Galaxy</title>
+        <link rel="icon" type="image/svg+xml" href="/open-galaxy.png" />
       </head>
       <body className={`antialiased`}>
         <ThemeProvider>
-          <SuiProviders>
-            <CopilotKit
-              runtimeUrl="/api/copilotkit"
-              // inspectorDefaultAnchor={{ horizontal: "right", vertical: "top" }}
-              useSingleEndpoint={false}
-            >
-              {children}
-            </CopilotKit>
-          </SuiProviders>
+          <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
