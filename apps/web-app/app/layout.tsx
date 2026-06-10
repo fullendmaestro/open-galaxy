@@ -24,13 +24,7 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <ThemeProvider>
           <SuiProviders>
-            <CopilotKit
-              runtimeUrl="/api/copilotkit"
-              // inspectorDefaultAnchor={{ horizontal: "right", vertical: "top" }}
-              useSingleEndpoint={false}
-            >
-              <TooltipProvider>{children}</TooltipProvider>
-            </CopilotKit>
+            <TooltipProvider>{children}</TooltipProvider>
           </SuiProviders>
         </ThemeProvider>
       </body>

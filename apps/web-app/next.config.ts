@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
         // Intercepts requests to /memwal-proxy/...
         source: "/memwal-proxy/:path*",
         // And forwards them to the staging relayer
-        destination: "https://relayer.staging.memwal.ai/:path*",
+        destination: `${process.env.NEXT_PUBLIC_MEMWAL_SERVER_URL}/:path*`,
       },
     ];
   },
