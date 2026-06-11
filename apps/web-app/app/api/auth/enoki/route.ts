@@ -45,28 +45,26 @@ export async function POST(request: Request) {
     const { suiAddress, privateKey, accountId } = body;
 
     if (!suiAddress || !SUI_ADDRESS_REGEX.test(suiAddress)) {
-      return Response.json(
-        { error: "Invalid Sui address." },
-        { status: 400 },
-      );
+      return Response.json({ error: "Invalid Sui address." }, { status: 400 });
     }
 
     // Phase 1: Check — only suiAddress provided
     if (!privateKey && !accountId) {
       const existing = await getUserBySuiAddress(suiAddress);
-
-      if (existing?.delegatePrivateKey && existing?.publicKey && existing?.accountId) {
-        // Returning user — recreate session from stored credentials
+      if (
+        existing?.delegatePrivateKey &&
+        existing?.publicKey &&
+        existing?.accountId
+      ) {
         await createSession(
           existing.id,
           existing.publicKey,
           existing.delegatePrivateKey,
           existing.accountId,
+          existing.isOnboarded, // Add this
         );
         return Response.json({ success: true, needsSetup: false });
       }
-
-      // No stored credentials — client needs to generate key + register on-chain
       return Response.json({ success: true, needsSetup: true });
     }
 
@@ -82,7 +80,11 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!accountId || typeof accountId !== "string" || !SUI_ADDRESS_REGEX.test(accountId)) {
+    if (
+      !accountId ||
+      typeof accountId !== "string" ||
+      !SUI_ADDRESS_REGEX.test(accountId)
+    ) {
       return Response.json(
         { error: "Valid account ID is required (0x... format)." },
         { status: 400 },
@@ -105,7 +107,13 @@ export async function POST(request: Request) {
         delegatePrivateKey: privateKey,
         accountId,
       });
-      await createSession(existing.id, derivedPublicKey, privateKey, accountId);
+      await createSession(
+        existing.id,
+        derivedPublicKey,
+        privateKey,
+        accountId,
+        existing.isOnboarded,
+      );
     } else {
       // Create new user
       const created = await createEnokiUser({
@@ -114,15 +122,18 @@ export async function POST(request: Request) {
         delegatePrivateKey: privateKey,
         accountId,
       });
-      await createSession(created.id, derivedPublicKey, privateKey, accountId);
+      await createSession(
+        created.id,
+        derivedPublicKey,
+        privateKey,
+        accountId,
+        created.isOnboarded,
+      );
     }
 
     return Response.json({ success: true, needsSetup: false });
   } catch (error) {
     console.error("[auth:enoki] Error:", error);
-    return Response.json(
-      { error: "Authentication failed" },
-      { status: 500 },
-    );
+    return Response.json({ error: "Authentication failed" }, { status: 500 });
   }
 }

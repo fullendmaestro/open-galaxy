@@ -1,0 +1,103 @@
+{
+  "id": "ce00b580-ba77-482a-b8cd-c2a83e3665b7",
+  "prevId": "9069ae6c-f4b8-4223-a0d1-b6f87459b5ba",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.User": {
+      "name": "User",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "publicKey": {
+          "name": "publicKey",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suiAddress": {
+          "name": "suiAddress",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "delegatePrivateKey": {
+          "name": "delegatePrivateKey",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accountId": {
+          "name": "accountId",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isOnboarded": {
+          "name": "isOnboarded",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "User_publicKey_unique": {
+          "name": "User_publicKey_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "publicKey"
+          ]
+        },
+        "User_suiAddress_unique": {
+          "name": "User_suiAddress_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "suiAddress"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

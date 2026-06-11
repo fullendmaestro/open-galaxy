@@ -15,6 +15,7 @@ import {
   PlusIcon,
   GalleryVerticalEndIcon,
 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useThreads } from "@copilotkit/react-core/v2";
 
 import {
@@ -45,11 +46,36 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { threadId, setThreadId } = useChatContext();
   const { threads } = useThreads({ agentId: "default" });
 
-  const userData = {
-    name: "Sui Researcher",
-    email: "user@galaxy.com",
+  const [userData, setUserData] = useState({
+    name: "Loading...",
+    address: "",
     avatar: "",
-  };
+  });
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const res = await fetch("/api/auth/profile");
+        if (res.ok) {
+          const data = await res.json();
+          setUserData({
+            name: data.email.split("@")[0],
+            address:
+              data.suiAddress || data.accountId || data.publicKey || "Unknown",
+            avatar: "",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load user profile:", error);
+        setUserData({
+          name: "Researcher",
+          address: "Not connected",
+          avatar: "",
+        });
+      }
+    }
+    fetchProfile();
+  }, []);
 
   return (
     <Sidebar collapsible="icon" {...props}>

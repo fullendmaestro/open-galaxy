@@ -1,4 +1,3 @@
-// proxy.ts
 import { type NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
@@ -21,35 +20,55 @@ export async function proxy(request: NextRequest) {
 
   const token = request.cookies.get("session")?.value;
   let isAuthenticated = false;
+  let isOnboarded = false;
 
   if (token) {
     try {
-      await jwtVerify(token, secret);
+      const { payload } = await jwtVerify(token, secret);
       isAuthenticated = true;
+      isOnboarded = payload.isOnboarded as boolean;
     } catch {
       // invalid or expired token
     }
   }
 
+  const isAuthPage = pathname === "/login" || pathname === "/register";
+  const isOnboardPage = pathname === "/onboard";
+
+  // 1. Unauthenticated Users
   if (!isAuthenticated) {
-    if (pathname === "/login") {
+    if (isAuthPage) {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (pathname === "/login" || pathname === "/register") {
+  // 2. Authenticated but NOT Onboarded
+  // 2. Authenticated but NOT Onboarded
+  if (!isOnboarded) {
+    // Allow access to the onboard page AND any API routes needed during onboarding
+    if (isOnboardPage || pathname.startsWith("/api/")) {
+      return NextResponse.next();
+    }
+    // Force redirect to onboard
+    return NextResponse.redirect(new URL("/onboard", request.url));
+  }
+
+  // 3. Authenticated AND Onboarded
+  if (isAuthPage || isOnboardPage) {
+    // Prevent access to login/register/onboard pages once fully set up
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  // 4. Default Allow
   return NextResponse.next();
 }
 
-// Add this back to ignore static files and images!
 export const config = {
   matcher: [
     "/",
     "/chat/:id",
+    "/onboard",
     "/api/:path*",
     "/login",
     "/register",

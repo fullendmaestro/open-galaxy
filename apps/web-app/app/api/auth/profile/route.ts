@@ -21,5 +21,6 @@ export async function GET() {
     accountId: dbUser.accountId ?? session.user.accountId ?? null,
     authMethod: dbUser.suiAddress ? "enoki" : "key",
     hasPrivateKey: !!session.user.privateKey,
+    avatar: dbUser.avatar ?? "", // Add this line
   });
 }

@@ -118,3 +118,36 @@ export async function updateEnokiUserCredentials({
     );
   }
 }
+
+export async function completeUserOnboarding(
+  userId: string,
+  data: {
+    avatar?: string;
+    username: string;
+    fullName: string;
+    role: string;
+    email: string;
+  },
+): Promise<void> {
+  try {
+    await db
+      .update(user)
+      .set({
+        avatar: data.avatar,
+        username: data.username,
+        fullName: data.fullName,
+        email: data.email,
+        role: data.role,
+        isOnboarded: true,
+      })
+      .where(eq(user.id, userId));
+  } catch (error: any) {
+    if (error.code === "23505" && error.message.includes("username")) {
+      throw new Error("Username is already taken");
+    }
+    throw new ChatbotError(
+      "bad_request:database",
+      "Failed to complete user onboarding",
+    );
+  }
+}

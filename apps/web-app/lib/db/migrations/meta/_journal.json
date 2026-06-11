@@ -8,6 +8,20 @@
       "when": 1781098088008,
       "tag": "0000_normal_mandrill",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781161369936,
+      "tag": "0001_majestic_the_renegades",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781163190883,
+      "tag": "0002_salty_crusher_hogan",
+      "breakpoints": true
     }
   ]
 }
