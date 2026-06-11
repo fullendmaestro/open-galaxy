@@ -3,12 +3,16 @@
 import "./globals.css";
 import "@copilotkit/react-core/v2/styles.css";
 
-import { CopilotKit } from "@copilotkit/react-core/v2";
+import dynamic from "next/dynamic";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { Geist, DM_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { SuiProviders } from "@/components/providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
+
+const SuiProviders = dynamic(
+  () => import("@/components/providers").then((mod) => mod.SuiProviders),
+  { ssr: false },
+);
 
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
